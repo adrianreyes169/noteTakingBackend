@@ -63,3 +63,22 @@ func ShowNoteByID(db *sql.DB, ID int) (Note, error) {
 
 	return n, nil
 }
+
+func DeleteNoteByID(db *sql.DB, ID int)(string, error){
+    result,err := db.Exec("DELETE FROM notes WHERE id = (?)",
+                            ID,)
+    if err !=nil {
+        return "", err
+    }
+    
+    rowsAffected, err := result.rowsAffected()
+
+    if err!= nil{
+        return "", err
+    }
+    if rowsAffected == 0{
+        return "", errors.New("No note found with that ID")
+    }
+
+    return "Note deleted succesfully", nil
+}

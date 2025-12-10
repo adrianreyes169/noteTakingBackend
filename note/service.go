@@ -55,3 +55,17 @@ func ShowNotesByIDService(db *sql.DB, ID int) (Note, error) {
 
 	return note, nil
 }
+
+func DeleteNoteByIDService(db *sql.DB,ID int)(string,error){
+	if ID <=0{
+		return "", errors.New("Invalid ID given")
+	}
+
+	_, err := DeleteNoteByID(db,ID)
+
+	if err !=nil {
+		return "",err
+	}
+
+	return "Note deleted successfully", nil
+}
