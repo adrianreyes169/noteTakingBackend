@@ -52,7 +52,7 @@ func ShowNotes(db *sql.DB) ([]Note, error) {
 
 func ShowNoteByID(db *sql.DB, ID int) (Note, error) {
 	var n Note
-	row := db.QueryRow("SELECT * FROM notes WHERE ID = (?)",
+	row := db.QueryRow("SELECT * FROM notes WHERE id = (?)",
 		ID)
 
 	err2 := row.Scan(&n.ID, &n.Title, &n.Content, &n.CreatedAt, &n.UpdatedAt)
