@@ -2,6 +2,7 @@ package note
 
 import (
 	"database/sql"
+	"errors"
 )
 
 func CreateNote(db *sql.DB, n Note) (int64, error) {
@@ -64,21 +65,21 @@ func ShowNoteByID(db *sql.DB, ID int) (Note, error) {
 	return n, nil
 }
 
-func DeleteNoteByID(db *sql.DB, ID int)(string, error){
-    result,err := db.Exec("DELETE FROM notes WHERE id = (?)",
-                            ID,)
-    if err !=nil {
-        return "", err
-    }
-    
-    rowsAffected, err := result.rowsAffected()
+func DeleteNoteByID(db *sql.DB, ID int) (string, error) {
+	result, err := db.Exec("DELETE FROM notes WHERE id = (?)",
+		ID)
+	if err != nil {
+		return "", err
+	}
 
-    if err!= nil{
-        return "", err
-    }
-    if rowsAffected == 0{
-        return "", errors.New("No note found with that ID")
-    }
+	rowsAffected, err := result.RowsAffected()
 
-    return "Note deleted succesfully", nil
+	if err != nil {
+		return "", err
+	}
+	if rowsAffected == 0 {
+		return "", errors.New("No note found with that ID")
+	}
+
+	return "Note deleted succesfully", nil
 }
