@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func ShoqNotesHandler(db *sql.DB) http.HandlerFunc {
+func ShowNotesHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			http.Error(w, "Method is not allowed", http.StatusMethodNotAllowed)
@@ -84,6 +84,37 @@ func CreateNotehandler(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]int64{"id": id})
+
+	}
+}
+
+func DeleteNoteByIDHandler(db *sql.DB, ID int) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodDelete {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		parts := strings.Split(r.URL.Path, "/")
+
+		if len(parts) != 3 {
+			http.Error(w, "Invalid URL", http.StatusBadRequest)
+			return
+		}
+
+		id, err := strconv.Atoi(parts[2])
+		if err != nil {
+			http.Error(w, "Invalid ID", http.StatusBadRequest)
+			return
+		}
+
+		_, err2 := DeleteNoteByIDService(db, id)
+
+		if err2 != nil {
+			http.Error(w, "Failed to delete note", http.StatusInternalServerError)
+		}
+
+		w.WriteHeader(http.StatusNoContent)
 
 	}
 }
