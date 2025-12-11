@@ -29,7 +29,7 @@ func ShowNotesHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func NotesByIDHandler(db *sql.DB, ID int) http.HandlerFunc {
+func NotesByIDHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			http.Error(w, "Method is not allowed", http.StatusMethodNotAllowed)
@@ -48,7 +48,7 @@ func NotesByIDHandler(db *sql.DB, ID int) http.HandlerFunc {
 			http.Error(w, "ID not valid", http.StatusBadRequest)
 		}
 
-		note, err := ShowNoteByID(db, ID)
+		note, err := ShowNoteByID(db, id)
 
 		if err != nil {
 			http.Error(w, "Failed to retrieve note"+err.Error(), http.StatusInternalServerError)
@@ -88,7 +88,7 @@ func CreateNotehandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func DeleteNoteByIDHandler(db *sql.DB, ID int) http.HandlerFunc {
+func DeleteNoteByIDHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
